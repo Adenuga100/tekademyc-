@@ -296,3 +296,4 @@ C:\Users\NUGA\source\repos\Tekademy1C#\Tekademy1C#\obj\Debug\net8.0\refint\Tekad
 C:\Users\NUGA\source\repos\Tekademy1C#\Tekademy1C#\obj\Debug\net8.0\Tekademy1C#.pdb
 C:\Users\NUGA\source\repos\Tekademy1C#\Tekademy1C#\obj\Debug\net8.0\Tekademy1C#.genruntimeconfig.cache
 C:\Users\NUGA\source\repos\Tekademy1C#\Tekademy1C#\obj\Debug\net8.0\ref\Tekademy1C#.dll
+C:\Users\NUGA\source\repos\Tekademy1C#\Tekademy1C#\obj\Debug\net8.0\Tekademy1C#.sourcelink.json
