@@ -74,6 +74,60 @@ namespace Tekademy1C_.StepDefinitions
             await _tekademypage.clickCheckbox();
         }
 
+        [When("user click on {string} menus")]
+        public async Task WhenUserClickOnMenus(string menus)
+        {
+            await _tekademypage.clickMenus(menus);
+        }
+
+        [When("user select categories")]
+        public async Task WhenUserSelectCategories()
+        {
+            await _tekademypage.selectCategory();
+        }
+
+
+        [When("user click on {string} button")]
+        public async Task WhenUserClickOnButton(string button)
+        {
+            await _tekademypage.clickButton(button);
+        }
+
+        [When("user enter title {string}")]
+        public async Task WhenUserEnterTitle(string title)
+        {
+            await _tekademypage.enterTitleAsync(title);
+        }
+
+        [When("user unclick Publish immediately")]
+        public async Task WhenUserUnclickPublishImmediately()
+        {
+            await _tekademypage.unCheckPublishImmediatelyAsync();
+        }
+
+
+        [When("user select a file {string}")]
+        public async Task WhenUserSelectAFile(string filePath)
+        {
+            await _tekademypage.selectFileAsync(filePath);
+        }
+
+
+        [When("user enter tags {string}")]
+        public async Task WhenUserEnterTags(string tags)
+        {
+            // Implementation for entering tags
+            await _tekademypage.enterTagsAsync(tags);
+        }
+
+
+        [When("user enter descriptions {string}")]
+        public async Task WhenUserEnterDescriptions(string descriptions)
+        {
+            await _tekademypage.enterDescription(descriptions);
+
+        }
+
 
         [Then("the page should be displayed")]
         public async Task ThenThePageShouldBeDisplayed()
