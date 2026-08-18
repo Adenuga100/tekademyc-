@@ -1,13 +1,14 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.Playwright;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
+using NUnit.Framework;
+using NUnit.Framework;
+using Reqnroll;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tekademy1C.PageObjects;
-using Microsoft.Playwright;
-using NUnit.Framework;
-using Reqnroll;
 using Tekademy1C_.Drivers;
 
 //namespace Tekademy1C.StepDefinitions
@@ -93,10 +94,29 @@ namespace Tekademy1C_.StepDefinitions
             await _tekademypage.clickButton(button);
         }
 
+        [When("user click on x button")]
+        public async Task WhenUserClickOnXButton()
+        {
+            await _tekademypage.clickXButton();
+        }
+
+
+        [Then("user is unable to click on {string} button")]
+        public async Task ThenUserIsUnableToClickOnButton(string button)
+        {
+            await _tekademypage.unableToClick(button);
+        }
+
         [When("user enter title {string}")]
         public async Task WhenUserEnterTitle(string title)
         {
             await _tekademypage.enterTitleAsync(title);
+        }
+
+        [When("user clear title field")]
+        public async Task WhenUserClearTitleField()
+        {
+            await _tekademypage.clearTitle();
         }
 
         [When("user unclick Publish immediately")]
@@ -141,6 +161,12 @@ namespace Tekademy1C_.StepDefinitions
         public async Task ThenAMessageShouldBeDisplayed(string message)
         {
             await _tekademypage.displayedMessage(message);
+        }
+
+        [Then("user redirected to {string} page")]
+        public async Task ThenUserRedirectedToPage(string page)
+        {
+            await _tekademypage.redirectedTopage(page);
         }
 
 
