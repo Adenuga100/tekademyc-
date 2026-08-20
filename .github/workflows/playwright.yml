@@ -1,26 +1,36 @@
 name: Playwright C# Tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup .NET
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0' # or your version
-      
+          dotnet-version: '8.0.x'
+
       - name: Restore dependencies
         run: dotnet restore
-      
-      - name: Install Playwright browsers
-        run: dotnet playwright install
-      
-      - name: Run tests
-        run: dotnet test
+
+      - name: Build solution
+        run: dotnet build --no-restore
+
+      - name: Install Playwright CLI and Chromium with system dependencies
+        run: |
+          dotnet tool install --global Microsoft.Playwright.CLI
+          playwright install --with-deps chromium
+
+      - name: Run Playwright Tests
+        run: dotnet test --no-build --verbosity normal
         env:
           PLAYWRIGHT_HEADLESS: "1"
