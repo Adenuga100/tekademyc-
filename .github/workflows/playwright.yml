@@ -1,28 +1,26 @@
 name: Playwright C# Tests
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push, pull_request]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    
     steps:
       - uses: actions/checkout@v4
       
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
-        
-      - name: Install dependencies
+        with:
+          dotnet-version: '8.0' # or your version
+      
+      - name: Restore dependencies
         run: dotnet restore
-        
+      
       - name: Install Playwright browsers
-        run: dotnet exec playwright.ps1 install
-        
+        run: dotnet playwright install
+      
       - name: Run tests
         run: dotnet test
         env:
-          # Enable headless mode for Chromium
-          PLAYWRIGHT_HEADLESS: 1
+          PLAYWRIGHT_HEADLESS: "1"
