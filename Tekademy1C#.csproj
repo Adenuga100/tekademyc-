@@ -18,5 +18,11 @@
   <ItemGroup>
     <Folder Include="Features\Admins\UserManagement\" />
   </ItemGroup>
-
+	
+	<Target Name="PlaywrightInstall" BeforeTargets="Build">
+		<Exec Command="dotnet playwright install" />
+	</Target>
+	
 </Project>
+
+
