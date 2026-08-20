@@ -69,6 +69,33 @@ namespace Tekademy1C_.StepDefinitions
             await _tekademypage.clickLoginButton();
         }
 
+        [When("user enter display order")]
+        public async Task WhenUserEnterDisplayOrder()
+        {
+            await _tekademypage.enterDisplayed();
+        }
+
+
+        [When("user enter category name {string}")]
+        public async Task WhenUserEnterCategoryName(string categoryName)
+        {
+            await _tekademypage.enterCategoryNameAsync(categoryName);
+        }
+
+        [When("user clear category name")]
+        public async Task WhenUserClearCategoryName()
+        {
+            await _tekademypage.clearCategoryNameAsync();
+        }
+
+
+        [When("user enter existing category name {string}")]
+        public async Task WhenUserEnterExistingCategoryName(string name)
+        {
+            await _tekademypage.existingCategoryName(name);
+        }
+
+
         [When("user click on checkbox")]
         public async Task WhenUserClickOnCheckbox()
         {
@@ -93,6 +120,20 @@ namespace Tekademy1C_.StepDefinitions
         {
             await _tekademypage.clickButton(button);
         }
+
+        [When("User click on Delete button")]
+        public async Task WhenUserClickOnDeleteButton()
+        {
+            await _tekademypage.deletebutn();
+        }
+
+        [When("User click on Edit button")]
+        public async Task WhenUserClickOnEditButton()
+        {
+            await _tekademypage.editbtn();
+        }
+
+
 
         [When("user click on x button")]
         public async Task WhenUserClickOnXButton()

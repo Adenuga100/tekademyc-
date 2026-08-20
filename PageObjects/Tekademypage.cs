@@ -42,6 +42,16 @@ namespace Tekademy1C.PageObjects
             return _page.Locator("button[type='submit']");
         }
 
+        public ILocator enterCategoryAsync()
+        {
+            return _page.Locator("input[id='resource-category-name']");
+        }
+       
+        public ILocator enterDisplay()
+        {
+            return _page.Locator("input[placeholder='0']");
+        }
+        
         public ILocator checkBox()
         {
             return _page.Locator("input[type='checkbox']");
@@ -61,6 +71,19 @@ namespace Tekademy1C.PageObjects
         {
             return _page.GetByRole(AriaRole.Button, new() { Name = button });
         }
+
+        public ILocator deleteBtn()
+        {
+            return _page.Locator("(//span[contains(text(),'DEVS')]/following::button[@aria-label='Delete category'])[1]");
+        }
+
+        public ILocator editBtn()
+        {
+            return _page.Locator("(//span[contains(text(),'DEVS')]/following::button[@aria-label='Edit category'])[1]");
+        }
+
+        
+
         public ILocator xButton()
         {
             return _page.Locator("span:has-text('Close')");
@@ -109,12 +132,12 @@ namespace Tekademy1C.PageObjects
         public string GenerateRandomName()
         {
             string[] categories = { "Dev", "Tester", "QA"};
-           
+
 
             Random random = new Random();
 
             string category = categories[random.Next(categories.Length)];
-          
+           
 
             return $"{category}";
         }
@@ -139,6 +162,34 @@ namespace Tekademy1C.PageObjects
             await loginbtn().ClickAsync();
         }
 
+        public async Task enterCategoryNameAsync(string categoryName)
+        {
+            Random random = new Random();
+            string displayOrder = random.Next(1, 10000).ToString();
+
+
+            await enterCategoryAsync().FillAsync(categoryName+displayOrder);
+        }
+
+        public async Task clearCategoryNameAsync()
+        {
+   
+            await enterCategoryAsync().ClearAsync();
+        }
+        
+        public async Task existingCategoryName(string name)
+        {
+            await enterCategoryAsync().FillAsync(name);
+        }
+
+        public async Task enterDisplayed()
+        {
+            Random random = new Random();
+            string displayOrder = random.Next(1, 15).ToString();
+
+            await enterDisplay().FillAsync(displayOrder);
+        }
+
         public async Task clickCheckbox()
         {
             await checkBox().ClickAsync();
@@ -159,6 +210,18 @@ namespace Tekademy1C.PageObjects
         {
             await buttons(button).ClickAsync();
         }
+
+        public async Task deletebutn()
+        {
+            await deleteBtn().ClickAsync();
+        }
+
+        public async Task editbtn()
+        {
+            await editBtn().ClickAsync();
+        }
+
+        
 
         public async Task clickXButton()
         {
