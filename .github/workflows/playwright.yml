@@ -11,17 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+      
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-
-      - name: Build Project
-        run: dotnet build
-
-      - name: Install Playwright Browsers
-        run: pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps
-
-      - name: Run Playwright Tests
+        
+      - name: Install dependencies
+        run: dotnet restore
+        
+      - name: Install Playwright browsers
+        run: dotnet exec playwright.ps1 install
+        
+      - name: Run tests
         run: dotnet test
+        env:
+          # Enable headless mode for Chromium
+          PLAYWRIGHT_HEADLESS: 1
