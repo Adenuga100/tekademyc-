@@ -1,0 +1,16 @@
+# .NET
+bin/
+obj/
+Debug/
+Release/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+
+# Playwright
+.playwright/
+playwright-report/
+test-results/
+TestResults/
