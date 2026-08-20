@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Admins\" />
+    <Folder Include="Features\Admins\UserManagement\" />
   </ItemGroup>
 
 </Project>

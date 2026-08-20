@@ -69,6 +69,88 @@ namespace Tekademy1C_.StepDefinitions
             await _tekademypage.clickLoginButton();
         }
 
+        [When("user select any role")]
+        public async Task WhenUserSelectAnyRole()
+        {
+            await _tekademypage.userSelectAnyRole();
+        }
+
+        [When("user select any role {string}")]
+        public async Task WhenUserSelectAnyRole(string role)
+        {
+            await _tekademypage.userSelectARole(role);
+        }
+
+
+        [When("user enter password {string}")]
+        public async Task WhenUserEnterPassword(string pass)
+        {
+            await _tekademypage.enterPassword(pass);
+        }
+
+        [Then("user is able to see the password he or she entered in the password field")]
+        public async Task ThenUserIsAbleToSeeThePasswordHeOrSheEnteredInThePasswordField()
+        {
+            await _tekademypage.isAbleToSeeThePasswordHeOrSheEnteredInThePasswordField();
+
+        }
+
+        [Then("user is unable to see the password he or she entered in the password field")]
+        public async Task ThenUserIsUnableToSeeThePasswordHeOrSheEnteredInThePasswordField()
+        {
+            await _tekademypage.isUnableToSeeThePasswordHeOrSheEnteredInThePasswordField();
+        }
+
+
+        [When("user click on eye icon on password field")]
+        public async Task WhenUserClickOnEyeIconOnPasswordField()
+        {
+            await _tekademypage.eyeIconOnPasswordField();
+        }
+
+        [When("user click on eye hide icon password field")]
+        public async Task WhenUserClickOnEyeHideIconPasswordField()
+        {
+            await _tekademypage.eyeHideIconOnPasswordField();
+        }
+
+
+        [When("user enter date of birth")]
+        public async Task WhenUserEnterDateOfBirth()
+        {
+            await _tekademypage.enterDateOfBirth();
+        }
+
+        [When("user enters date of birth")]
+        public async Task WhenUserEntersDateOfBirth()
+        {
+            await _tekademypage.enterLeast13DateOfBirth();
+        }
+
+        [When("user enter last name")]
+        public async Task WhenUserEnterLastName()
+        {
+            await _tekademypage.enterLastName();
+        }
+
+        [When("user enter email {string}")]
+        public async Task WhenUserEnterEmail(string email)
+        {
+            await _tekademypage.enterEmailAddress(email);
+        }
+
+        [When("user enter email")]
+        public async Task WhenUserEnterEmail()
+        {
+            await _tekademypage.enterEmailAsync();
+        }
+
+        [When("user enter first name")]
+        public async Task WhenUserEnterFirstName()
+        {
+            await _tekademypage.enterFirstName();
+        }
+
         [When("user click on checkbox")]
         public async Task WhenUserClickOnCheckbox()
         {
@@ -161,6 +243,18 @@ namespace Tekademy1C_.StepDefinitions
         public async Task ThenAMessageShouldBeDisplayed(string message)
         {
             await _tekademypage.displayedMessage(message);
+        }
+
+        [Then("A password message should be displayed {string}")]
+        public async Task ThenAPasswordMessageShouldBeDisplayed(string p0)
+        {
+            await _tekademypage.passwordMessageShouldBeDisplayed();
+        }
+
+        [Then("A message should be displayed {string} on {string} field")]
+        public async Task ThenAMessageShouldBeDisplayedOnField(string pop, string locator)
+        {
+            await _tekademypage.aMessageShouldBeDisplayedOnField(pop, locator);
         }
 
         [Then("user redirected to {string} page")]
