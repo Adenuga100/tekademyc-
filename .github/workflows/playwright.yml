@@ -1,27 +1,26 @@
 name: Playwright C# Tests
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push, pull_request]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    
     steps:
       - uses: actions/checkout@v4
-
+      
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
-
-      - name: Build Project
-        run: dotnet build
-
-      - name: Install Playwright Browsers
-        run: pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps
-
-      - name: Run Playwright Tests
+          dotnet-version: '8.0' # or your version
+      
+      - name: Restore dependencies
+        run: dotnet restore
+      
+      - name: Install Playwright browsers
+        run: dotnet playwright install
+      
+      - name: Run tests
         run: dotnet test
+        env:
+          PLAYWRIGHT_HEADLESS: "1"
