@@ -25,8 +25,8 @@ jobs:
       - name: Build solution
         run: dotnet build --no-restore
 
-      - name: Run tests
-        run: npx cucumber-js
+      - name: Install Playwright
+        run: dotnet tool install --global Microsoft.Playwright.CLI
         
       - name: Run Playwright Tests
         run: dotnet test --no-build --verbosity normal
