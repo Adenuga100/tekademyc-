@@ -165,13 +165,22 @@ namespace Tekademy1C.PageObjects
         {
             return _page.GetByText(page).First;
         }
+        //public class UserData
+        //{
+        //    public string Category { get; set; }
+        //    public string FirstName { get; set; }
+        //    public string LastName { get; set; }
+        //    public string Email { get; set; }
+        //    public string DateOfBirth { get; set; }
+        //    public string Least13DateOfBirth { get; set; } = DateTime.Now.AddYears(-11).ToString("yyyy-MM-dd");
+        //}
         public class UserData
         {
-            public string Category { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public string Email { get; set; }
-            public string DateOfBirth { get; set; }
+            public required string Category { get; set; }
+            public required string FirstName { get; set; }
+            public required string LastName { get; set; }
+            public required string Email { get; set; }
+            public required string DateOfBirth { get; set; }
             public string Least13DateOfBirth { get; set; } = DateTime.Now.AddYears(-11).ToString("yyyy-MM-dd");
         }
 
