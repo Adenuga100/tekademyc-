@@ -15,7 +15,7 @@ namespace Tekademy1C_.Drivers
             Browser = await Playwright.Chromium.LaunchAsync(
                 new BrowserTypeLaunchOptions
                 {
-                    Headless = false, // Set to false if you want to see the browser window
+                    Headless = true, // Set to false if you want to see the browser window
                 });
 
             Page = await Browser.NewPageAsync();
@@ -23,8 +23,10 @@ namespace Tekademy1C_.Drivers
 
         public async Task StopAsync()
         {
+            //await Browser.CloseAsync();
+            //Playwright.Dispose();
+            await Page.CloseAsync();
             await Browser.CloseAsync();
-            Playwright.Dispose();
         }
     }
 }
