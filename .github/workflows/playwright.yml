@@ -25,11 +25,12 @@ jobs:
       - name: Build solution
         run: dotnet build --no-restore
 
-      - name: Install Playwright dependencies
-        run: |
-          dotnet tool install --global Microsoft.Playwright.CLI --version 1.48.0
-          playwright install --with-deps chromium
-
+      - name: Install Playwright
+        run: dotnet tool install --global Microsoft.Playwright.CLI
+        
+      - name: Install Playwright Browsers
+        run: playwright install
+        
       - name: Run Playwright Tests
         run: dotnet test --no-build --verbosity normal
         env:
