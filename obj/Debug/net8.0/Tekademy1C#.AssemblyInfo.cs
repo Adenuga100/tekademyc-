@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Tekademy1C#")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+65f5e02a98ca12985358be72dcfa2dd2a6a13a85")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a57916752a3c89848f3960c0dc0f3fe49baa1445")]
 [assembly: System.Reflection.AssemblyProductAttribute("Tekademy1C#")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Tekademy1C#")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
