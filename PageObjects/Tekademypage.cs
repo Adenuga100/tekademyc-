@@ -147,6 +147,7 @@ namespace Tekademy1C.PageObjects
 
         public ILocator displayed(string message)
         {
+            
             return _page.GetByText(message).First;
         }
 
@@ -410,9 +411,9 @@ namespace Tekademy1C.PageObjects
 
         public async Task<bool> displayedMessage(string message)
         {
-            //await displayed(message).WaitForAsync();
-
-            //Assert.That(await displayed(message).IsVisibleAsync(), Is.True);
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+            await displayed(message).WaitForAsync(new LocatorWaitForOptions { Timeout = 60000 });
+           
             await displayed(message).WaitForAsync();
 
             Assert.That(await displayed(message).IsVisibleAsync(),Is.True);
