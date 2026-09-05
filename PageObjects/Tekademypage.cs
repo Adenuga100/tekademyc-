@@ -232,8 +232,14 @@ namespace Tekademy1C.PageObjects
         public async Task clickLoginButton()
         {
             await loginbtn().ClickAsync();
+            
+
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
+            Console.WriteLine(await _page.Locator("body").InnerTextAsync());
+
         }
-        
+
         public async Task userSelectAnyRole()
         {
             // 1. Target all role elements EXCEPT SuperAdmin
