@@ -99,7 +99,8 @@ namespace Tekademy1C.PageObjects
 
         public ILocator menu(string menus)
         {
-            return _page.Locator($"span:has-text('{menus}')");
+            return _page.GetByRole(AriaRole.Link, new() { Name = $"{menus}" });
+            //return _page.Locator($"span:has-text('{menus}')");
         }
 
         public ILocator select()
@@ -410,9 +411,10 @@ namespace Tekademy1C.PageObjects
 
       
 
-        public async Task VerifyDashboardIsVisible()
+        public async Task<bool> VerifyDashboardIsVisible()
         {
             await Expect(Dashboard()).ToBeVisibleAsync();
+            return true;
         }
 
       
@@ -421,9 +423,11 @@ namespace Tekademy1C.PageObjects
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
             await displayed(message).WaitForAsync(new LocatorWaitForOptions { Timeout = 60000 });
            
-            await displayed(message).WaitForAsync();
+            //await displayed(message).WaitForAsync();
 
-            Assert.That(await displayed(message).IsVisibleAsync(),Is.True);
+            //Assert.That(await displayed(message).IsVisibleAsync(),Is.True);
+            await Expect(displayed(message)).ToBeVisibleAsync();
+
             return true;
         }
 
