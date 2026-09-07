@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using static Microsoft.Playwright.Assertions;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -140,11 +141,10 @@ namespace Tekademy1C.PageObjects
             return _page.Locator("textarea[id='resource-description']");
         }
 
-        public ILocator dashboard()
+        public ILocator Dashboard()
         {
-            return _page.Locator("img[alt='Tekademy']");
+            return _page.GetByAltText("Tekademy");
         }
-
         public ILocator displayed(string message)
         {
             
@@ -410,11 +410,12 @@ namespace Tekademy1C.PageObjects
 
       
 
-        public async Task Dashboard()
+        public async Task VerifyDashboardIsVisible()
         {
-            await dashboard().WaitForAsync();
+            await Expect(Dashboard()).ToBeVisibleAsync();
         }
 
+      
         public async Task<bool> displayedMessage(string message)
         {
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);

@@ -267,7 +267,7 @@ namespace Tekademy1C_.StepDefinitions
         [Then("User should be logged in")]
         public async Task ThenUserShouldBeLoggedIn()
         {
-            await _tekademypage.Dashboard();
+            await _tekademypage.VerifyDashboardIsVisible();
         }
 
     }
