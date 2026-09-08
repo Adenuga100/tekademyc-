@@ -26,6 +26,7 @@ namespace Tekademy1C_.Drivers
 
             await Page.GotoAsync(baseUrl);
 
+
             await Page.WaitForSelectorAsync(
                 "body",
                 new PageWaitForSelectorOptions
