@@ -42,7 +42,8 @@ namespace Tekademy1C.PageObjects
 
         public ILocator loginbtn()
         {
-            return _page.Locator("button[type='submit']");
+            return _page.GetByRole(AriaRole.Button, new() { Name = "Continue with this email" });
+            //return _page.Locator("button[type='submit']");
         }
 
         public ILocator selectRoles()
@@ -233,6 +234,7 @@ namespace Tekademy1C.PageObjects
 
         public async Task clickLoginButton()
         {
+            await loginbtn().ScrollIntoViewIfNeededAsync();
             await loginbtn().ClickAsync();
             
 
