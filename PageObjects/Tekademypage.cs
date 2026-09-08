@@ -97,9 +97,11 @@ namespace Tekademy1C.PageObjects
             return _page.Locator("input[type='checkbox']");
         }
 
-        public ILocator menu(string menus)
+        public async Task<ILocator> menu(string menus)
         {
-            return _page.GetByRole(AriaRole.Link, new() { Name = $"{menus}" });
+            return  _page.GetByRole(AriaRole.Link, new() { Name = "{menus}" });
+           
+
             //return _page.Locator($"span:has-text('{menus}')");
         }
 
@@ -148,8 +150,7 @@ namespace Tekademy1C.PageObjects
         }
         public ILocator displayed(string message)
         {
-            
-            return _page.GetByText(message).First;
+            return _page.GetByLabel("Notifications Alt+T").GetByText(message);
         }
 
         public ILocator passwordMessage()
