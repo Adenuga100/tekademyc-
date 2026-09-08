@@ -362,6 +362,7 @@ namespace Tekademy1C.PageObjects
 
         public async Task clickButton(string button)
         {
+
             await buttons(button).ClickAsync();
         }
 
