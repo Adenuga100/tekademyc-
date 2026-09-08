@@ -19,7 +19,7 @@ namespace Tekademy1C_.Drivers
             Browser = await Playwright.Chromium.LaunchAsync(
                 new BrowserTypeLaunchOptions
                 {
-                    Headless = true
+                    Headless = false
                 });
 
             Page = await Browser.NewPageAsync();
