@@ -99,7 +99,7 @@ namespace Tekademy1C.PageObjects
 
         public ILocator menu(string menus)
         {
-            return  _page.GetByRole(AriaRole.Link, new() { Name = "{menus}" });
+            return  _page.GetByRole(AriaRole.Link, new() { Name = $"{menus}" });
            
 
             //return _page.Locator($"span:has-text('{menus}')");
