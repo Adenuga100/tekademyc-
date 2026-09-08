@@ -1,37 +1,32 @@
 name: Playwright C# Tests
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push, pull_request]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v3
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0.x'
-
-      - name: Restore dependencies
+          dotnet-version: '8.0' # Adjust to your .NET version
+      
+      - name: Install Playwright browsers
+        run: dotnet tool install --global Microsoft.Playwright.CLI && playwright install chromium
+      
+      - name: Install dependencies
         run: dotnet restore
-
-      - name: Build solution
-        run: dotnet build --no-restore
-
-      - name: Install Playwright
-        run: dotnet tool install --global Microsoft.Playwright.CLI
-        
-      - name: Install Playwright Browsers
-        run: playwright install
-        
-      - name: Run Playwright Tests
-        run: dotnet test --no-build --verbosity normal
+      
+      # ADD THIS SECTION - Install virtual display server
+      - name: Install Xvfb
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb
+      
+      # ADD THIS SECTION - Run tests with virtual display
+      - name: Run Playwright tests
+        run: xvfb-run -a dotnet test --logger "console;verbosity=detailed"
         env:
-          PLAYWRIGHT_HEADLESS: "1"
+          DISPLAY: :99
