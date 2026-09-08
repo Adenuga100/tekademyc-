@@ -97,7 +97,7 @@ namespace Tekademy1C.PageObjects
             return _page.Locator("input[type='checkbox']");
         }
 
-        public async Task<ILocator> menu(string menus)
+        public ILocator menu(string menus)
         {
             return  _page.GetByRole(AriaRole.Link, new() { Name = "{menus}" });
            
