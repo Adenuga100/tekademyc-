@@ -148,7 +148,7 @@ namespace Tekademy1C.PageObjects
         public ILocator Dashboard()
         {
             //return _page.GetByAltText("Tekademy");
-            return _page.GetByAltText("Overview");
+            return _page.GetByText("Overview");
 
             
         }
@@ -242,8 +242,9 @@ namespace Tekademy1C.PageObjects
 
             await loginbtn().ClickAsync();
 
-            await loginbtn().ClickAsync();
+            //await loginbtn().ClickAsync();
 
+            //await loginbtn().ClickAsync();
 
             //await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
@@ -431,8 +432,8 @@ namespace Tekademy1C.PageObjects
       
         public async Task<bool> displayedMessage(string message)
         {
-            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
-            await displayed(message).WaitForAsync(new LocatorWaitForOptions { Timeout = 60000 });
+            //await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+            //await displayed(message).WaitForAsync(new LocatorWaitForOptions { Timeout = 60000 });
            
             //await displayed(message).WaitForAsync();
 

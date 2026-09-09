@@ -42,11 +42,11 @@ namespace Tekademy1C_.StepDefinitions
 
         //    await _tekademypage.OpenAsync();
         //}
-
         [Given("User navigates to takademy {string}")]
         public async Task GivenUserNavigatesToTakademyAsync(string url)
         {
-            _tekademypage = new Tekademypage(_driver.Page);
+         _tekademypage = new Tekademypage(_driver.Page);
+
 
             await _tekademypage.OpenAsync(url);
         }

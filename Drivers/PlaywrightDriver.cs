@@ -5,7 +5,7 @@ namespace Tekademy1C_.Drivers
 {
     public class PlaywrightDriver
     {
-        private readonly string baseUrl = "https://tekademy-admin-app.vercel.app/app/dashboard";
+        //private readonly string baseUrl = "https://tekademy-admin-app.vercel.app/app/dashboard";
 
         public IPlaywright Playwright { get; private set; }
         public IBrowser Browser { get; private set; }
@@ -19,12 +19,12 @@ namespace Tekademy1C_.Drivers
             Browser = await Playwright.Chromium.LaunchAsync(
                 new BrowserTypeLaunchOptions
                 {
-                    Headless = true
+                    Headless = true,
                 });
 
             Page = await Browser.NewPageAsync();
 
-            await Page.GotoAsync(baseUrl);
+            //await Page.GotoAsync(baseUrl);
 
 
             await Page.WaitForSelectorAsync(
