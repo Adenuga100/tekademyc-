@@ -147,8 +147,12 @@ namespace Tekademy1C.PageObjects
 
         public ILocator Dashboard()
         {
-            return _page.GetByAltText("Tekademy");
+            //return _page.GetByAltText("Tekademy");
+            return _page.GetByAltText("Overview");
+
+            
         }
+
         public ILocator displayed(string message)
         {
             return _page.GetByLabel("Notifications Alt+T").GetByText(message);
@@ -235,8 +239,11 @@ namespace Tekademy1C.PageObjects
         public async Task clickLoginButton()
         {
             await loginbtn().ScrollIntoViewIfNeededAsync();
+
             await loginbtn().ClickAsync();
-            
+
+            await loginbtn().ClickAsync();
+
 
             //await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
@@ -478,3 +485,25 @@ namespace Tekademy1C.PageObjects
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
