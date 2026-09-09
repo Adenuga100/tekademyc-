@@ -242,13 +242,13 @@ namespace Tekademy1C.PageObjects
 
             await loginbtn().ClickAsync();
 
-            await loginbtn().ClickAsync();
+            //await loginbtn().ClickAsync();
 
             //await loginbtn().ClickAsync();
 
-            //await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
-            //Console.WriteLine(await _page.Locator("body").InnerTextAsync());
+            Console.WriteLine(await _page.Locator("body").InnerTextAsync());
 
         }
 
@@ -356,6 +356,10 @@ namespace Tekademy1C.PageObjects
 
         public async Task clickMenus(string menus)
         {
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
+            Console.WriteLine(await _page.Locator("body").InnerTextAsync());
+
             await menu(menus).ClickAsync();
         }
 
