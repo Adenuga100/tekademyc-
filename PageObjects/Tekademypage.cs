@@ -242,7 +242,7 @@ namespace Tekademy1C.PageObjects
 
             await loginbtn().ClickAsync();
 
-            //await loginbtn().ClickAsync();
+            await loginbtn().ClickAsync();
 
             //await loginbtn().ClickAsync();
 
