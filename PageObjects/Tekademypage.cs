@@ -283,12 +283,32 @@ namespace Tekademy1C.PageObjects
             //{
             //    Timeout = 60_000
             //});
-            await _page.WaitForURLAsync("**/dashboard**", new()
-            {
-                Timeout = 60_000
-            });
+            //await _page.WaitForURLAsync("**/dashboard**", new()
+            //{
+            //    Timeout = 60_000
+            //});
 
-            await Expect(_page.Locator("body")).ToContainTextAsync("Overview");
+    
+
+            try
+            {
+                await Expect(menu("Library")).ToBeVisibleAsync(new()
+                {
+                    Timeout = 60_000
+                });
+            }
+            catch
+            {
+                await _page.ScreenshotAsync(new()
+                {
+                    Path = "login-failure.png",
+                    FullPage = true
+                });
+                Console.WriteLine($"Current URL: {_page.Url}");
+                Console.WriteLine(await _page.Locator("body").InnerTextAsync());
+                throw;
+            }
+            //await Expect(_page.Locator("body")).ToContainTextAsync("Overview");
         }
 
         public async Task userSelectAnyRole()
