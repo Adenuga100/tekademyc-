@@ -1,14 +1,16 @@
 ﻿using Microsoft.ApplicationInsights.Extensibility.Implementation;
+using Microsoft.Extensions.DependencyModel;
 using Microsoft.Playwright;
 using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using static Microsoft.Playwright.Assertions;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.Playwright.Assertions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 //namespace Tekademy1C.PageObjects
@@ -236,20 +238,57 @@ namespace Tekademy1C.PageObjects
             await passwordInput().FillAsync(password);
         }
 
+       
+        public async Task clickMenus(string menus)
+        {
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
+            await Expect(menu(menus)).ToBeVisibleAsync(new() { Timeout = 60_000 });
+
+            await menu(menus).ClickAsync();
+        }
+
+        //public async Task clickLoginButton()
+        //{
+        //    await loginbtn().ScrollIntoViewIfNeededAsync();
+
+        //    await loginbtn().ClickAsync();
+
+        //    //await loginbtn().ClickAsync();
+
+        //    //await loginbtn().ClickAsync();
+
+        //    //await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
+        //    //Console.WriteLine(await _page.Locator("body").InnerTextAsync());
+
+        //    await _page.WaitForURLAsync("**/dashboard**", new()
+        //    {
+        //        Timeout = 60_000
+        //    });
+
+        //    await Expect(menu(menus))
+        //        .ToBeVisibleAsync(new() { Timeout = 60_000 });
+
+        //}
+
+
         public async Task clickLoginButton()
         {
             await loginbtn().ScrollIntoViewIfNeededAsync();
 
             await loginbtn().ClickAsync();
 
-            //await loginbtn().ClickAsync();
+            //await _page.WaitForURLAsync("**/dashboard**", new()
+            //{
+            //    Timeout = 60_000
+            //});
+            await _page.WaitForURLAsync("**/dashboard**", new()
+            {
+                Timeout = 60_000
+            });
 
-            //await loginbtn().ClickAsync();
-
-            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
-
-            Console.WriteLine(await _page.Locator("body").InnerTextAsync());
-
+            await Expect(_page.Locator("body")).ToContainTextAsync("Overview");
         }
 
         public async Task userSelectAnyRole()
@@ -354,14 +393,8 @@ namespace Tekademy1C.PageObjects
             await checkBox().ClickAsync();
         }
 
-        public async Task clickMenus(string menus)
-        {
-            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
-            Console.WriteLine(await _page.Locator("body").InnerTextAsync());
-
-            await menu(menus).ClickAsync();
-        }
+      
 
         public async Task selectCategory()
         {
