@@ -16,6 +16,7 @@ namespace Tekademy1C_.Support
         [BeforeScenario]
         public async Task BeforeScenario()
         {
+
             await _driver.StartAsync();
         }
 
