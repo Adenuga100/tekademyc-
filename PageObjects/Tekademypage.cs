@@ -273,42 +273,96 @@ namespace Tekademy1C.PageObjects
         //}
 
 
+        //public async Task clickLoginButton()
+        //{
+        //    await loginbtn().ScrollIntoViewIfNeededAsync();
+
+        //    await loginbtn().ClickAsync();
+
+        //    //await _page.WaitForURLAsync("**/dashboard**", new()
+        //    //{
+        //    //    Timeout = 60_000
+        //    //});
+        //    //await _page.WaitForURLAsync("**/dashboard**", new()
+        //    //{
+        //    //    Timeout = 60_000
+        //    //});
+
+
+
+        //    //try
+        //    //{
+        //    //    await Expect(menu("Library")).ToBeVisibleAsync(new()
+        //    //    {
+        //    //        Timeout = 60_000
+        //    //    });
+        //    //}
+        //    //catch
+        //    //{
+        //    //    await _page.ScreenshotAsync(new()
+        //    //    {
+        //    //        Path = "login-failure.png",
+        //    //        FullPage = true
+        //    //    });
+        //    //    Console.WriteLine($"Current URL: {_page.Url}");
+        //    //    Console.WriteLine(await _page.Locator("body").InnerTextAsync());
+        //    //    throw;
+        //    //}
+
+        //    response =>
+        //    response.Request.Method == "POST" &&
+        //    response.Url.Contains("auth", StringComparison.OrdinalIgnoreCase),
+        //new()
+        //{
+        //    Timeout = 60_000
+        //});
+
+        //    Console.WriteLine($"Request URL: {loginResponse.Url}");
+        //    Console.WriteLine($"Request method: {loginResponse.Request.Method}");
+        //    Console.WriteLine($"Response status: {loginResponse.Status}");
+
+        //    var responseBody = await loginResponse.TextAsync();
+        //    Console.WriteLine($"Response body: {responseBody}");
+
+        //    await Expect(menu("Library")).ToBeVisibleAsync(new()
+        //    {
+        //        Timeout = 60_000
+        //    });
+        //    //await Expect(_page.Locator("body")).ToContainTextAsync("Overview");
+        //}
+
         public async Task clickLoginButton()
         {
             await loginbtn().ScrollIntoViewIfNeededAsync();
 
-            await loginbtn().ClickAsync();
-
-            //await _page.WaitForURLAsync("**/dashboard**", new()
-            //{
-            //    Timeout = 60_000
-            //});
-            //await _page.WaitForURLAsync("**/dashboard**", new()
-            //{
-            //    Timeout = 60_000
-            //});
-
-    
-
-            try
-            {
-                await Expect(menu("Library")).ToBeVisibleAsync(new()
+            var loginResponse = await _page.RunAndWaitForResponseAsync(
+                async () =>
+                {
+                    await loginbtn().ClickAsync();
+                },
+                response =>
+                    response.Request.Method == "POST" &&
+                    response.Url.Contains("auth", StringComparison.OrdinalIgnoreCase),
+                new()
                 {
                     Timeout = 60_000
                 });
-            }
-            catch
+
+            Console.WriteLine($"Request URL: {loginResponse.Url}");
+            Console.WriteLine($"Request method: {loginResponse.Request.Method}");
+            Console.WriteLine($"Response status: {loginResponse.Status}");
+
+            var responseBody = await loginResponse.TextAsync();
+            Console.WriteLine($"Response body: {responseBody}");
+            await _page.ScreenshotAsync(new()
             {
-                await _page.ScreenshotAsync(new()
-                {
-                    Path = "login-failure.png",
-                    FullPage = true
-                });
-                Console.WriteLine($"Current URL: {_page.Url}");
-                Console.WriteLine(await _page.Locator("body").InnerTextAsync());
-                throw;
-            }
-            //await Expect(_page.Locator("body")).ToContainTextAsync("Overview");
+                Path = "login-failure.png",
+                FullPage = true
+            });
+            await Expect(menu("Library")).ToBeVisibleAsync(new()
+            {
+                Timeout = 60_000
+            });
         }
 
         public async Task userSelectAnyRole()
