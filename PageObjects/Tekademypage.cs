@@ -335,34 +335,46 @@ namespace Tekademy1C.PageObjects
         {
             await loginbtn().ScrollIntoViewIfNeededAsync();
 
-            var loginResponse = await _page.RunAndWaitForResponseAsync(
-                async () =>
+            try
+            {
+                var loginResponse = await _page.RunAndWaitForResponseAsync(
+                    async () =>
+                    {
+                        await loginbtn().ClickAsync();
+                    },
+                    response =>
+                        response.Request.Method == "POST" &&
+                        response.Url.Contains("auth", StringComparison.OrdinalIgnoreCase),
+                    new()
+                    {
+                        Timeout = 60_000
+                    });
+
+                TestContext.Progress.WriteLine($"Login URL: {loginResponse.Url}");
+                TestContext.Progress.WriteLine($"Login status: {loginResponse.Status}");
+
+                if (loginResponse.Status >= 400)
                 {
-                    await loginbtn().ClickAsync();
-                },
-                response =>
-                    response.Request.Method == "POST" &&
-                    response.Url.Contains("auth", StringComparison.OrdinalIgnoreCase),
-                new()
+                    var responseBody = await loginResponse.TextAsync();
+                    TestContext.Progress.WriteLine($"Login error response: {responseBody}");
+                }
+
+                await Expect(menu("Library")).ToBeVisibleAsync(new()
                 {
                     Timeout = 60_000
                 });
-
-            Console.WriteLine($"Request URL: {loginResponse.Url}");
-            Console.WriteLine($"Request method: {loginResponse.Request.Method}");
-            Console.WriteLine($"Response status: {loginResponse.Status}");
-
-            var responseBody = await loginResponse.TextAsync();
-            Console.WriteLine($"Response body: {responseBody}");
-            await _page.ScreenshotAsync(new()
+            }
+            catch
             {
-                Path = "login-failure.png",
-                FullPage = true
-            });
-            await Expect(menu("Library")).ToBeVisibleAsync(new()
-            {
-                Timeout = 60_000
-            });
+                await _page.ScreenshotAsync(new()
+                {
+                    Path = "login-failure.png",
+                    FullPage = true
+                });
+
+                TestContext.Progress.WriteLine($"Current URL: {_page.Url}");
+                throw;
+            }
         }
 
         public async Task userSelectAnyRole()
