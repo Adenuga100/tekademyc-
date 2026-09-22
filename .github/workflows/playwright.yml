@@ -2,9 +2,9 @@ name: Playwright C# Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
@@ -32,3 +32,11 @@ jobs:
         run: dotnet test --no-build --verbosity normal
         env:
           PLAYWRIGHT_HEADLESS: "1"
+
+      - name: Upload login failure screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: login-failure-screenshot
+          path: "**/login-failure.png"
+          if-no-files-found: ignore
