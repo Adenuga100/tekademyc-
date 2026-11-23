@@ -1,11 +1,16 @@
-﻿using Microsoft.Playwright;
+﻿using Microsoft.ApplicationInsights.Extensibility.Implementation;
+using Microsoft.Extensions.DependencyModel;
+using Microsoft.Playwright;
 using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.Playwright.Assertions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 //namespace Tekademy1C.PageObjects
@@ -39,7 +44,55 @@ namespace Tekademy1C.PageObjects
 
         public ILocator loginbtn()
         {
-            return _page.Locator("button[type='submit']");
+            return _page.GetByRole(AriaRole.Button, new() { Name = "Continue with this email" });
+            //return _page.Locator("button[type='submit']");
+        }
+
+        public ILocator selectRoles()
+        {
+            return _page.Locator("[class='flex flex-wrap gap-2'] [type='button']") // Update 'label' to match your role container/checkbox locator
+                .Filter(new LocatorFilterOptions { HasNotText = "SuperAdmin" });
+        }
+
+        public ILocator selectARole(string role)
+        {
+            return _page.Locator("[class='flex flex-wrap gap-2'] [type='button']") // Update 'label' to match your role container/checkbox locator
+                .Filter(new LocatorFilterOptions { HasText = role });
+        }
+
+        public ILocator firstname()
+        {
+            return _page.Locator("input[id='user-firstName']");
+        }
+
+        public ILocator password()
+        {
+            return _page.Locator("input[id='user-password']");
+        }
+
+        public ILocator eyeIcon()
+        {
+            return _page.Locator("button[aria-label='Show password']");
+        }
+
+        public ILocator eyeHideIcon()
+        {
+            return _page.Locator("button[aria-label='Hide password']");
+        }
+        
+        public ILocator lastname()
+        {
+            return _page.Locator("input[id='user-lastName']");
+        }
+
+        public ILocator userDateOfBirth()
+        {
+            return _page.Locator("input[id='user-dateOfBirth']");
+        }
+        
+        public ILocator emailAddress()
+        {
+            return _page.Locator("input[id='user-email']");
         }
 
         public ILocator checkBox()
@@ -49,7 +102,10 @@ namespace Tekademy1C.PageObjects
 
         public ILocator menu(string menus)
         {
-            return _page.Locator($"span:has-text('{menus}')");
+            return  _page.GetByRole(AriaRole.Link, new() { Name = $"{menus}" });
+           
+
+            //return _page.Locator($"span:has-text('{menus}')");
         }
 
         public ILocator select()
@@ -91,32 +147,80 @@ namespace Tekademy1C.PageObjects
             return _page.Locator("textarea[id='resource-description']");
         }
 
-        public ILocator dashboard()
+        public ILocator Dashboard()
         {
-            return _page.Locator("img[alt='Tekademy']");
+            //return _page.GetByAltText("Tekademy");
+            return _page.GetByText("Overview");
+
+            
         }
 
         public ILocator displayed(string message)
         {
-            return _page.GetByText(message).First;
+            return _page.GetByLabel("Notifications Alt+T").GetByText(message);
         }
+
+        public ILocator passwordMessage()
+        {
+            return _page.Locator("ul[id='user-password-errors']");
+        }
+        
+        public ILocator displayedOnField(string locator)
+        {
+            return _page.Locator($"input[id='user-{locator}']");
+        }
+        
 
         public ILocator redirected(string page)
         {
             return _page.GetByText(page).First;
         }
-        
-        public string GenerateRandomName()
+        //public class UserData
+        //{
+        //    public string Category { get; set; }
+        //    public string FirstName { get; set; }
+        //    public string LastName { get; set; }
+        //    public string Email { get; set; }
+        //    public string DateOfBirth { get; set; }
+        //    public string Least13DateOfBirth { get; set; } = DateTime.Now.AddYears(-11).ToString("yyyy-MM-dd");
+        //}
+        public class UserData
         {
-            string[] categories = { "Dev", "Tester", "QA"};
-           
+            public required string Category { get; set; }
+            public required string FirstName { get; set; }
+            public required string LastName { get; set; }
+            public required string Email { get; set; }
+            public required string DateOfBirth { get; set; }
+            public string Least13DateOfBirth { get; set; } = DateTime.Now.AddYears(-11).ToString("yyyy-MM-dd");
+        }
 
+        public UserData GenerateRandomName()
+        {
+            string[] categories = { "Tester", "QA"};
+            string[] firstNames = { "Yemi", "Bj", "Alice", "Bob", "Charlie", "David", "Eve", "Frank" };
+            string[] lastNames = { "Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis" };
+            string[] years = { "1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005" };
+            string[] months = { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12" };
+            string[] days = { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12",
+                              "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23",
+                              "24", "25", "26", "27", "28" };
             Random random = new Random();
 
             string category = categories[random.Next(categories.Length)];
-          
+            string firstNameValue = firstNames[random.Next(firstNames.Length)];
+            string lastName = lastNames[random.Next(lastNames.Length)];
+            string email = $"{firstNameValue.ToLower()}.{lastName.ToLower()}{random.Next(0, 10000)}@example.com";
+            string dateOfBirth = $"{years[random.Next(years.Length)]}-{months[random.Next(months.Length)]}-{days[random.Next(days.Length)]}";
 
-            return $"{category}";
+            // 2. Return matching UserData properties
+            return new UserData
+            {
+                Category = category,
+                FirstName = firstNameValue,
+                LastName = lastName,
+                Email = email,
+                DateOfBirth = dateOfBirth
+            };
         }
 
         public async Task OpenAsync(string url)
@@ -134,29 +238,264 @@ namespace Tekademy1C.PageObjects
             await passwordInput().FillAsync(password);
         }
 
+       
+        public async Task clickMenus(string menus)
+        {
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
+            await Expect(menu(menus)).ToBeVisibleAsync(new() { Timeout = 60_000 });
+
+            await menu(menus).ClickAsync();
+        }
+
+        //public async Task clickLoginButton()
+        //{
+        //    await loginbtn().ScrollIntoViewIfNeededAsync();
+
+        //    await loginbtn().ClickAsync();
+
+        //    //await loginbtn().ClickAsync();
+
+        //    //await loginbtn().ClickAsync();
+
+        //    //await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
+        //    //Console.WriteLine(await _page.Locator("body").InnerTextAsync());
+
+        //    await _page.WaitForURLAsync("**/dashboard**", new()
+        //    {
+        //        Timeout = 60_000
+        //    });
+
+        //    await Expect(menu(menus))
+        //        .ToBeVisibleAsync(new() { Timeout = 60_000 });
+
+        //}
+
+
+        //public async Task clickLoginButton()
+        //{
+        //    await loginbtn().ScrollIntoViewIfNeededAsync();
+
+        //    await loginbtn().ClickAsync();
+
+        //    //await _page.WaitForURLAsync("**/dashboard**", new()
+        //    //{
+        //    //    Timeout = 60_000
+        //    //});
+        //    //await _page.WaitForURLAsync("**/dashboard**", new()
+        //    //{
+        //    //    Timeout = 60_000
+        //    //});
+
+
+
+        //    //try
+        //    //{
+        //    //    await Expect(menu("Library")).ToBeVisibleAsync(new()
+        //    //    {
+        //    //        Timeout = 60_000
+        //    //    });
+        //    //}
+        //    //catch
+        //    //{
+        //    //    await _page.ScreenshotAsync(new()
+        //    //    {
+        //    //        Path = "login-failure.png",
+        //    //        FullPage = true
+        //    //    });
+        //    //    Console.WriteLine($"Current URL: {_page.Url}");
+        //    //    Console.WriteLine(await _page.Locator("body").InnerTextAsync());
+        //    //    throw;
+        //    //}
+
+        //    response =>
+        //    response.Request.Method == "POST" &&
+        //    response.Url.Contains("auth", StringComparison.OrdinalIgnoreCase),
+        //new()
+        //{
+        //    Timeout = 60_000
+        //});
+
+        //    Console.WriteLine($"Request URL: {loginResponse.Url}");
+        //    Console.WriteLine($"Request method: {loginResponse.Request.Method}");
+        //    Console.WriteLine($"Response status: {loginResponse.Status}");
+
+        //    var responseBody = await loginResponse.TextAsync();
+        //    Console.WriteLine($"Response body: {responseBody}");
+
+        //    await Expect(menu("Library")).ToBeVisibleAsync(new()
+        //    {
+        //        Timeout = 60_000
+        //    });
+        //    //await Expect(_page.Locator("body")).ToContainTextAsync("Overview");
+        //}
+
         public async Task clickLoginButton()
         {
-            await loginbtn().ClickAsync();
+            await loginbtn().ScrollIntoViewIfNeededAsync();
+
+            try
+            {
+                var loginResponse = await _page.RunAndWaitForResponseAsync(
+                    async () =>
+                    {
+                        await loginbtn().ClickAsync();
+                    },
+                    response =>
+                        response.Request.Method == "POST" &&
+                        response.Url.Contains("auth", StringComparison.OrdinalIgnoreCase),
+                    new()
+                    {
+                        Timeout = 60_000
+                    });
+
+                TestContext.Progress.WriteLine($"Login URL: {loginResponse.Url}");
+                TestContext.Progress.WriteLine($"Login status: {loginResponse.Status}");
+
+                if (loginResponse.Status >= 400)
+                {
+                    var responseBody = await loginResponse.TextAsync();
+                    TestContext.Progress.WriteLine($"Login error response: {responseBody}");
+                }
+
+                await Expect(menu("Library")).ToBeVisibleAsync(new()
+                {
+                    Timeout = 60_000
+                });
+            }
+            catch
+            {
+                await _page.ScreenshotAsync(new()
+                {
+                    Path = "login-failure.png",
+                    FullPage = true
+                });
+
+                TestContext.Progress.WriteLine($"Current URL: {_page.Url}");
+                throw;
+            }
         }
+
+        public async Task userSelectAnyRole()
+        {
+            // 1. Target all role elements EXCEPT SuperAdmin
+         
+
+            int totalCount = await selectRoles().CountAsync();
+            if (totalCount == 0) return;
+
+            // 2. Pick a single random index from available roles
+            int randomIndex = Random.Shared.Next(0, totalCount);
+
+            // 3. Click the selected role
+            await selectRoles().Nth(randomIndex).ClickAsync();
+        }
+
+        public async Task userSelectARole(string role)
+        {
+            // 1. Target all role elements EXCEPT SuperAdmin
+
+
+           
+
+            // 3. Click the selected role
+            await selectARole(role).ClickAsync();
+        }
+        public string PasswordVisible { get; set; }
+        public async Task enterPassword(string pass)
+        {
+            await password().FillAsync(pass);
+            PasswordVisible = await password().GetAttributeAsync("value");
+        }
+
+        public async Task <bool>isAbleToSeeThePasswordHeOrSheEnteredInThePasswordField()
+        {
+            // Fetch current input value from the password field
+            string currentInputValue = await password().GetAttributeAsync("value");
+
+            // Check if current value matches the stored password string
+            return PasswordVisible == currentInputValue;
+        }
+
+        public async Task<bool> isUnableToSeeThePasswordHeOrSheEnteredInThePasswordField()
+        {
+            // Fetch current input value from the password field
+            string currentInputValue = await password().GetAttributeAsync("value");
+
+            // Check if current value matches the stored password string
+            return PasswordVisible != currentInputValue;
+        }
+        
+        public async Task eyeIconOnPasswordField()
+        {
+            await eyeIcon().ClickAsync();
+        }
+
+        public async Task eyeHideIconOnPasswordField()
+        {
+            await eyeHideIcon().ClickAsync();
+        }
+        
+        public async Task enterFirstName()
+        {
+            UserData user = GenerateRandomName();
+            await firstname().FillAsync(user.FirstName);
+        }
+
+        public async Task enterLastName()
+        {
+            UserData user = GenerateRandomName();
+            await lastname().FillAsync(user.LastName);
+        }
+
+        public async Task enterEmailAddress(string email)
+        {
+            await emailAddress().FillAsync(email);
+        }
+        
+        public async Task enterDateOfBirth()
+        {
+            UserData user = GenerateRandomName();
+            await userDateOfBirth().FillAsync(user.DateOfBirth);
+        }
+
+        public async Task enterLeast13DateOfBirth()
+        {
+            UserData user = GenerateRandomName();
+            await userDateOfBirth().FillAsync(user.Least13DateOfBirth);
+            // Implementation for entering date of birth (at least 13 years old)
+        }
+
+        public async Task enterEmailAsync()
+        {
+            UserData user = GenerateRandomName();
+            await emailAddress().FillAsync(user.Email);
+        }
+   
 
         public async Task clickCheckbox()
         {
             await checkBox().ClickAsync();
         }
 
-        public async Task clickMenus(string menus)
-        {
-            await menu(menus).ClickAsync();
-        }
+
+      
 
         public async Task selectCategory()
         {
-            string category = GenerateRandomName();
-            await select().SelectOptionAsync(category);
+            // Generate all data once
+            UserData user = GenerateRandomName();
+
+            // Access individual properties
+           
+            
+            await select().SelectOptionAsync(user.Category);
         }
 
         public async Task clickButton(string button)
         {
+
             await buttons(button).ClickAsync();
         }
 
@@ -166,10 +505,11 @@ namespace Tekademy1C.PageObjects
         }
         
 
-        public async Task unableToClick(string button)
+        public async Task<bool> unableToClick(string button)
         {
             //await buttons(button).IsEnabledAsync();
             Assert.That(await buttons(button).IsEnabledAsync(), Is.False);
+            return true;
         }
 
         public async Task enterTitleAsync(string title)
@@ -206,22 +546,50 @@ namespace Tekademy1C.PageObjects
 
       
 
-        public async Task Dashboard()
+        public async Task<bool> VerifyDashboardIsVisible()
         {
-            await dashboard().WaitForAsync();
+            await Expect(Dashboard()).ToBeVisibleAsync();
+            return true;
         }
 
-        public async Task displayedMessage(string message)
+      
+        public async Task<bool> displayedMessage(string message)
+        {
+            //await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+            //await displayed(message).WaitForAsync(new LocatorWaitForOptions { Timeout = 60000 });
+           
+            //await displayed(message).WaitForAsync();
+
+            //Assert.That(await displayed(message).IsVisibleAsync(),Is.True);
+            await Expect(displayed(message)).ToBeVisibleAsync();
+
+            return true;
+        }
+
+        public async Task<bool> passwordMessageShouldBeDisplayed()
         {
             //await displayed(message).WaitForAsync();
 
             //Assert.That(await displayed(message).IsVisibleAsync(), Is.True);
-            await displayed(message).WaitForAsync();
+            await passwordMessage().WaitForAsync();
 
-            Assert.That(await displayed(message).IsVisibleAsync(),Is.True);
+            Assert.That(await passwordMessage().IsVisibleAsync(), Is.True);
+            return true;
+        }
+        
+        public async Task<bool> aMessageShouldBeDisplayedOnField(string pop , string locator)
+        {
+            // 1. Get the browser's native validation popup text
+            string validationMessage = await displayedOnField(locator).EvaluateAsync<string>("el => el.validationMessage");
+
+            // 2. Assert the message text matches
+            Assert.That(validationMessage, Is.EqualTo(pop));
+            return true;
         }
 
-        public async Task redirectedTopage(string page)
+       
+
+        public async Task<bool> redirectedTopage(string page)
         {
             //await displayed(message).WaitForAsync();
 
@@ -229,6 +597,7 @@ namespace Tekademy1C.PageObjects
             await redirected(page).WaitForAsync();
 
             Assert.That(await redirected(page).IsVisibleAsync(), Is.True);
+            return true;
         }
         
 
@@ -240,3 +609,25 @@ namespace Tekademy1C.PageObjects
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
