@@ -150,14 +150,15 @@ namespace Tekademy1C.PageObjects
         public ILocator Dashboard()
         {
             //return _page.GetByAltText("Tekademy");
-            return _page.GetByText("Overview");
+           return _page.GetByRole(AriaRole.Heading, new() { Name = "Dashboard Overview" });
 
             
         }
 
         public ILocator displayed(string message)
         {
-            return _page.GetByLabel("Notifications Alt+T").GetByText(message);
+           return _page.GetByLabel("Notifications Alt+T").GetByText(message);
+
         }
 
         public ILocator passwordMessage()
@@ -335,46 +336,7 @@ namespace Tekademy1C.PageObjects
         {
             await loginbtn().ScrollIntoViewIfNeededAsync();
 
-            try
-            {
-                var loginResponse = await _page.RunAndWaitForResponseAsync(
-                    async () =>
-                    {
-                        await loginbtn().ClickAsync();
-                    },
-                    response =>
-                        response.Request.Method == "POST" &&
-                        response.Url.Contains("auth", StringComparison.OrdinalIgnoreCase),
-                    new()
-                    {
-                        Timeout = 60_000
-                    });
-
-                TestContext.Progress.WriteLine($"Login URL: {loginResponse.Url}");
-                TestContext.Progress.WriteLine($"Login status: {loginResponse.Status}");
-
-                if (loginResponse.Status >= 400)
-                {
-                    var responseBody = await loginResponse.TextAsync();
-                    TestContext.Progress.WriteLine($"Login error response: {responseBody}");
-                }
-
-                await Expect(menu("Library")).ToBeVisibleAsync(new()
-                {
-                    Timeout = 60_000
-                });
-            }
-            catch
-            {
-                await _page.ScreenshotAsync(new()
-                {
-                    Path = "login-failure.png",
-                    FullPage = true
-                });
-
-                TestContext.Progress.WriteLine($"Current URL: {_page.Url}");
-                throw;
-            }
+            await loginbtn().ClickAsync();
         }
 
         public async Task userSelectAnyRole()
