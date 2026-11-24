@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -15,4 +15,12 @@
     <PackageReference Include="NUnit3TestAdapter" Version="5.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Admins\UserManagement\" />
+  </ItemGroup>
+	
+	
+	
 </Project>
+
+
