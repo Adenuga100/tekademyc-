@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Tekademy1C.PageObjects;
 using Tekademy1C_.Drivers;
 
@@ -102,6 +103,18 @@ namespace Tekademy1C_.StepDefinitions
             await _tekademypage.userSelectAnyRole();
         }
 
+        [When("user select any roles")]
+        public async Task WhenUserSelectAnyRoles()
+        {
+            await _tekademypage.userSelectAnyRoles();
+        }
+
+        [When("user select any roles{string}")]
+        public async Task WhenUserSelectAnyRoles(string super)
+        {
+            await _tekademypage.userSelectSuperRoles(super);
+        }
+
         [When("user select any role {string}")]
         public async Task WhenUserSelectAnyRole(string role)
         {
@@ -184,6 +197,30 @@ namespace Tekademy1C_.StepDefinitions
             await _tekademypage.clickCheckbox();
         }
 
+        [When("user click assign icon")]
+        public async Task WhenUserClickAssignIcon()
+        {
+            await _tekademypage.clickAssignIcon();
+        }
+
+        [When("user click suspended icon")]
+        public async Task WhenUserClickSuspendedIcon()
+        {
+            await _tekademypage.clickSuspendedIcon();
+        }
+
+        [When("user click on active icon")]
+        public async Task WhenUserClickOnActiveIcon()
+        {
+            await _tekademypage.clickActiveIcon();
+        }
+
+        [When("user click on delete icon")]
+        public async Task WhenUserClickOnDeleteIcon()
+        {
+            await _tekademypage.clickDeleteIcon();
+        }
+
         [When("user click on {string} menus")]
         public async Task WhenUserClickOnMenus(string menus)
         {
@@ -203,6 +240,29 @@ namespace Tekademy1C_.StepDefinitions
             await _tekademypage.clickButton(button);
         }
 
+        [When("user enter {string} on search bar")]
+        public async Task WhenUserEnterOnSearchBar(string name)
+        {
+            await _tekademypage.userEnterOnSearchBar(name);
+        }
+
+        [When("user select any role on all roles field")]
+        public async Task WhenUserSelectAnyRoleOnAllRolesField()
+        {
+            await _tekademypage.userSelectAnyRoleOnAllRolesField();
+        }
+
+        [When("user select any roles on all roles field")]
+        public async Task WhenUserSelectAnyRolesOnAllRolesField()
+        {
+            await _tekademypage.userSelectAnyRolesOnAllRolesField();
+        }
+
+        [When("user select any status on all status field")]
+        public async Task WhenUserSelectAnyStatusOnAllStatusField()
+        {
+            await _tekademypage.userSelectAnyStatusOnAllStatusField();
+        }
         [When("User click on Delete button")]
         public async Task WhenUserClickOnDeleteButton()
         {
@@ -285,6 +345,46 @@ namespace Tekademy1C_.StepDefinitions
         {
             await _tekademypage.displayedMessage(message);
         }
+
+        [Then("user verify the picked role is equal to the role on the user management page")]
+        public async Task ThenUserVerifyThePickedRoleIsEqualToTheRoleOnTheUserManagementPage()
+        {
+            await _tekademypage.pickedRole();
+        }
+
+        [Then("user verify the active user as be suspended user management page")]
+        public async Task ThenUserVerifyTheActiveUserAsBeSuspendedUserManagementPage()
+        {
+            await _tekademypage.suspendedRole();
+        }
+
+        [Then("user verify the suspended user as be Active user management page")]
+        public async Task ThenUserVerifyTheSuspendedUserAsBeActiveUserManagementPage()
+        {
+            await _tekademypage.activeRole();
+        }
+
+        [Then("user verify the delete user has been deleted user management page")]
+        public async Task ThenUserVerifyTheDeleteUserHasBeenDeletedUserManagementPage()
+        {
+            await _tekademypage.userVerifyTheDeleteUserHasBeenDeletedUserManagementPage();
+        }
+
+        [Then("user verify user have not delete")]
+        public async Task ThenUserVerifyUserHaveNotDelete()
+        {
+            await _tekademypage.UserVerifyUserHaveNotDelete();
+        }
+
+        
+
+        [Then("user view the search name under {string} on the table")]
+        public async Task ThenUserViewTheSearchNameUnderOnTheTable(string table)
+        {
+            await _tekademypage.userViewTheSearchNameOnTheTable(table);
+
+        }
+
 
         [Then("A password message should be displayed {string}")]
         public async Task ThenAPasswordMessageShouldBeDisplayed(string p0)
