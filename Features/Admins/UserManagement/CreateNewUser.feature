@@ -230,3 +230,67 @@ Scenario: verify x button works User Management
 	And user click on x button
 	Then user redirected to "User Management" page
 	
+Scenario: Assign a role on user Management page
+	When user click on "User Management" menus
+	And user click assign icon 
+	And user select any roles
+	And user click on "Save role" button
+	Then A message should be displayed "Role assigned successfully"
+	And user verify the picked role is equal to the role on the user management page 
+
+Scenario: Assign a role as a super admin on user Management page
+	When user click on "User Management" menus
+	And user click assign icon 
+	And user select any roles"SuperAdmin"
+	And user click on "Save role" button
+	Then A message should be displayed "SuperAdmin role assignment requires a dedicated break-glass process"
+
+Scenario: Admin suspended a Active user on user Management page
+	When user click on "User Management" menus 
+	And user click suspended icon
+	Then A message should be displayed "User suspended"
+	And user verify the active user as be suspended user management page
+
+
+Scenario: Admin Active a suspended on user Management page
+	When user click on "User Management" menus 
+	And user click on active icon
+	Then A message should be displayed "User reactivated"
+	And user verify the suspended user as be Active user management page
+
+
+Scenario: Admin delete user on user Management page
+	When user click on "User Management" menus 
+	And user click on delete icon
+	And user click on "Delete" button
+	Then A message should be displayed "User deleted successfully"
+	And user verify the delete user has been deleted user management page
+
+
+Scenario: Admin cancel when deleting a user user on user Management page
+	When user click on "User Management" menus 
+	And user click on delete icon
+	And user click on "Cancel" button
+	Then user verify user have not delete
+
+
+Scenario: Admin Search users by name or email on user Management page
+	When user click on "User Management" menus 
+	And user enter "Adenuga Adeyemi" on search bar
+	Then user view the search name under "User" on the table
+
+
+Scenario: Admin filter role on user Management page
+	When user click on "User Management" menus 
+	And user select any role on all roles field 
+	Then user view the search name under "Role" on the table
+
+Scenario: Admin filter role with No users yet result and create a new user on user Management page
+	When user click on "User Management" menus 
+	And user select any roles on all roles field 
+	Then user view the search name under "Role" on the table
+
+Scenario: Admin filter status on user Management page
+	When user click on "User Management" menus 
+	And user select any status on all status field 
+	Then user view the search name under "Status" on the table
