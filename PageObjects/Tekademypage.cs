@@ -8,8 +8,10 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
 using System.Numerics;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 using static Microsoft.Playwright.Assertions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -50,10 +52,16 @@ namespace Tekademy1C.PageObjects
 
         public ILocator selectRoles()
         {
-            return _page.Locator("[class='flex flex-wrap gap-2'] [type='button']") // Update 'label' to match your role container/checkbox locator
+            return _page.Locator("//button[contains(@class,'inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors border-[#E5E7EB] bg-white text-[#374151] hover:border-[#D1D5DB]')]") // Update 'label' to match your role container/checkbox locator
                 .Filter(new LocatorFilterOptions { HasNotText = "SuperAdmin" });
         }
 
+        public ILocator selectSuperRoles(string super)
+        {
+            return _page.Locator("//button[contains(@class,'inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors border-[#E5E7EB] bg-white text-[#374151] hover:border-[#D1D5DB]')]") // Update 'label' to match your role container/checkbox locator
+                .Filter(new LocatorFilterOptions { HasText = super });
+        }
+        
         public ILocator selectARole(string role)
         {
             return _page.Locator("[class='flex flex-wrap gap-2'] [type='button']") // Update 'label' to match your role container/checkbox locator
@@ -100,6 +108,39 @@ namespace Tekademy1C.PageObjects
             return _page.Locator("input[type='checkbox']");
         }
 
+        public ILocator assignIcon()
+        {
+            return _page.Locator("(//p[contains(text(),'@example.com')]/following::button[contains(@aria-label,'Assign role')])[1]");
+        }
+
+        public ILocator suspendedIcon()
+        {
+            return _page.Locator("(//tr[.//p[contains(text(),'@example.com')]] //button[@aria-label='Suspend user'])[1]");
+        }
+
+        public ILocator deleteIcon()
+        {
+            return _page.Locator("(//tr[.//p[contains(text(),'@example.com')]]//button[@aria-label='Delete user'])[1]");
+        }
+
+        public ILocator deleteRoles()
+        {
+            return _page.Locator("(//tr[.//button[@aria-label='Delete user']]//p[contains(text(),'@example.com')])[1]");
+        }
+
+
+        public ILocator activeIcon()
+        {
+            return _page.Locator("(//tr[.//p[contains(text(),'@example.com')]]//button[@aria-label='Unsuspend user'])[1]");
+        }
+
+        
+        public ILocator nextButton()
+        {
+            return _page.Locator("//button[@aria-label='Next page']");
+        }
+
+        
         public ILocator menu(string menus)
         {
             return  _page.GetByRole(AriaRole.Link, new() { Name = $"{menus}" });
@@ -117,6 +158,36 @@ namespace Tekademy1C.PageObjects
         {
             return _page.GetByRole(AriaRole.Button, new() { Name = button });
         }
+
+        public ILocator enterOnSearchBar()
+        {
+            return _page.Locator("//input[@placeholder='Search users by name or email...']");
+        }
+
+
+        public ILocator RolesField()
+        {
+            return _page.GetByRole(AriaRole.Combobox).Filter(new() { HasText = "All Roles" });
+        }
+
+        public ILocator statusField()
+        {
+            return _page.GetByRole(AriaRole.Combobox).Filter(new() { HasText = "All Status" });
+        }
+        
+        public ILocator anyRole()
+        {
+            UserData user = GenerateRandomName();
+            return _page.GetByLabel(user.SelectAnyRole).GetByText(user.SelectAnyRole);
+        }
+
+        public ILocator anyStatus()
+        {
+            UserData user = GenerateRandomName();
+            return _page.GetByLabel(user.selectStatus).GetByText(user.selectStatus);
+        }
+        
+
         public ILocator xButton()
         {
             return _page.Locator("span:has-text('Close')");
@@ -155,9 +226,39 @@ namespace Tekademy1C.PageObjects
             
         }
 
+
+        public ILocator pickRole()
+        {
+            //return _page.GetByAltText("Tekademy");
+            return _page.Locator($"//span[contains(text(),'{role}')]").First;
+
+
+        }
+
+        
+
+        public ILocator viewSuspendedRole()
+        {
+            //return _page.GetByAltText("Tekademy");
+            return _page.Locator("(//p[contains(text(),'@example.com')]/following::span[contains(text(),'Suspended')])[1]").First;
+        }
+        public ILocator viewActiveRole()
+        {
+            //return _page.GetByAltText("Tekademy");
+            return _page.Locator("(//p[contains(text(),'@example.com')]/following::span[contains(text(),'Active')])[1]");
+        }
+
+        public ILocator deleteUserHasBeenDeleted()
+        {
+            //return _page.GetByAltText("Tekademy");
+            return _page.Locator($"(//p[contains(text(),'{deleteuser}')])[1]");
+        }
+
+        
+
         public ILocator displayed(string message)
         {
-            return _page.GetByLabel("Notifications Alt+T").GetByText(message);
+            return _page.GetByText(message);
         }
 
         public ILocator passwordMessage()
@@ -186,6 +287,10 @@ namespace Tekademy1C.PageObjects
         //}
         public class UserData
         {
+            
+            public required string selectStatus { get; set; }
+
+            public required string SelectAnyRole { get; set; }
             public required string Category { get; set; }
             public required string FirstName { get; set; }
             public required string LastName { get; set; }
@@ -193,9 +298,11 @@ namespace Tekademy1C.PageObjects
             public required string DateOfBirth { get; set; }
             public string Least13DateOfBirth { get; set; } = DateTime.Now.AddYears(-11).ToString("yyyy-MM-dd");
         }
-
+        
         public UserData GenerateRandomName()
         {
+            string[] selectAnyStatuss = { "Active", "Inactive", "Suspended", "Pending"};
+            string[] SelectAnyRoles = { "Student User", "Course Admin", "Live Class Admin", "Payment Admin", "Instructor", "Admin", "Resource Admin", "Test admin", "Marketing", "Sales" };
             string[] categories = { "Tester", "QA"};
             string[] firstNames = { "Yemi", "Bj", "Alice", "Bob", "Charlie", "David", "Eve", "Frank" };
             string[] lastNames = { "Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis" };
@@ -205,7 +312,8 @@ namespace Tekademy1C.PageObjects
                               "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23",
                               "24", "25", "26", "27", "28" };
             Random random = new Random();
-
+            string selectAnyStatus = selectAnyStatuss[random.Next(selectAnyStatuss.Length)];
+            string SelectAnyRole = SelectAnyRoles[random.Next(SelectAnyRoles.Length)];
             string category = categories[random.Next(categories.Length)];
             string firstNameValue = firstNames[random.Next(firstNames.Length)];
             string lastName = lastNames[random.Next(lastNames.Length)];
@@ -215,6 +323,8 @@ namespace Tekademy1C.PageObjects
             // 2. Return matching UserData properties
             return new UserData
             {
+                selectStatus = selectAnyStatus,
+                SelectAnyRole = SelectAnyRole,
                 Category = category,
                 FirstName = firstNameValue,
                 LastName = lastName,
@@ -380,7 +490,7 @@ namespace Tekademy1C.PageObjects
         public async Task userSelectAnyRole()
         {
             // 1. Target all role elements EXCEPT SuperAdmin
-         
+
 
             int totalCount = await selectRoles().CountAsync();
             if (totalCount == 0) return;
@@ -391,6 +501,31 @@ namespace Tekademy1C.PageObjects
             // 3. Click the selected role
             await selectRoles().Nth(randomIndex).ClickAsync();
         }
+
+        string role;
+        public async Task userSelectAnyRoles()
+        {
+            var roles = selectRoles();
+            int totalCount = await roles.CountAsync();
+
+            if (totalCount == 0)
+                throw new InvalidOperationException("No selectable roles were found.");
+
+            var selectedRole = roles.Nth(Random.Shared.Next(totalCount));
+            role = (await selectedRole.InnerTextAsync()).Trim();
+
+            await selectedRole.ClickAsync();
+
+        }
+
+        public async Task userSelectSuperRoles(string super)
+        {
+            
+            await selectSuperRoles(super).ClickAsync();
+
+        }
+        
+
 
         public async Task userSelectARole(string role)
         {
@@ -479,9 +614,102 @@ namespace Tekademy1C.PageObjects
             await checkBox().ClickAsync();
         }
 
+        
+        public async Task clickAssignIcon()
+        {
+            await assignIcon().ClickAsync();
+        }
 
-      
+        string deleteuser;
+        public async Task clickDeleteIcon()
+        {
+            while (true)
+            {
+                await Task.Delay(1000);
 
+                var deleteIcons = _page.Locator("(//tr[.//p[contains(text(),'@example.com')]]//button[@aria-label='Delete user'])[1]");
+                int count = await deleteIcons.CountAsync();
+
+
+                if (count > 0)
+                {
+                    var deleteusers = deleteRoles();
+                    int totalCount = await deleteusers.CountAsync();
+
+                    if (totalCount == 0)
+                        throw new InvalidOperationException("No selectable roles were found.");
+
+                    var selectedRole = deleteusers.Nth(Random.Shared.Next(totalCount));
+                    deleteuser = (await selectedRole.InnerTextAsync()).Trim();
+                    await deleteIcon().ScrollIntoViewIfNeededAsync();
+                    await deleteIcon().ClickAsync();
+                    break;
+                }
+                else
+                {
+                    await nextButton().ScrollIntoViewIfNeededAsync();
+                    await nextButton().ClickAsync();
+                }
+
+            }
+
+        }
+
+
+
+        public async Task clickActiveIcon()
+        {
+            while (true)
+            {
+                await Task.Delay(1000);
+         
+                var activeIcons = _page.Locator("(//tr[.//p[contains(text(),'@example.com')]]//button[@aria-label='Unsuspend user'])[1]");
+                int count = await activeIcons.CountAsync();
+
+
+                if (count > 0)
+                {
+                    
+                    await activeIcon().ScrollIntoViewIfNeededAsync();
+                    await activeIcon().ClickAsync();
+                    break;
+                }
+                else
+                {
+                    await suspendedIcon().ScrollIntoViewIfNeededAsync();
+                    await suspendedIcon().ClickAsync();
+                }
+
+            }
+
+        }
+        
+        public async Task clickSuspendedIcon()
+        {
+            while (true)
+            {
+                await Task.Delay(1000);
+
+                var suspendedIcons = _page.Locator("(//tr[.//p[contains(text(),'@example.com')]]//button[@aria-label='Suspend user'])[1]");
+                int count = await suspendedIcons.CountAsync();
+
+
+                if (count > 0)
+                {
+                    await suspendedIcon().ScrollIntoViewIfNeededAsync();
+                    await suspendedIcon().ClickAsync();
+                    break;
+                }
+                else
+                {
+                    await nextButton().ScrollIntoViewIfNeededAsync();
+                    await nextButton().ClickAsync();
+                }
+
+            }
+           
+        }
+        
         public async Task selectCategory()
         {
             // Generate all data once
@@ -498,6 +726,96 @@ namespace Tekademy1C.PageObjects
 
             await buttons(button).ClickAsync();
         }
+        string searchBar;
+        public async Task userEnterOnSearchBar(string name)
+        {
+            await enterOnSearchBar().FillAsync(name);
+
+            searchBar = (await enterOnSearchBar().InnerTextAsync()).Trim();
+        }
+
+        public async Task userSelectAnyStatusOnAllStatusField()
+        {
+            await statusField().ClickAsync();
+            var selectedRole = anyStatus();
+            searchBar = (await selectedRole.InnerTextAsync()).Trim();
+
+            await selectedRole.ClickAsync();
+
+        }
+        
+        public async Task userSelectAnyRoleOnAllRolesField()
+        {
+            await RolesField().ClickAsync();
+            var selectedRole = anyRole();
+            searchBar = (await selectedRole.InnerTextAsync()).Trim();
+
+            await selectedRole.ClickAsync();
+
+
+        }
+
+        public async Task userSelectAnyRolesOnAllRolesField()
+        {
+            await RolesField().ClickAsync();
+            var selectedRole = anyRole();
+            searchBar = (await selectedRole.InnerTextAsync()).Trim();
+
+            await selectedRole.ClickAsync();
+
+            while (true)
+            {  
+
+                var noUsersyet = _page.Locator("//h3[contains(text(),'No users yet')]");
+                int count = await noUsersyet.CountAsync();
+
+                if (count > 0)
+                {
+                    clickButton("Add User");
+                    enterFirstName();
+                    enterLastName();
+                    enterEmailAsync();
+                    enterPassword("Password123!");
+                    enterDateOfBirth();
+                    userSelectARole(searchBar);
+                    clickButton("Add User");
+                }
+                else
+                {
+                    break;
+                }
+
+            }
+           
+
+
+        }
+
+        public async Task userSelectNonexistingUserOnAllRolesField()
+        {
+
+            while(true){
+                var nousersyet = _page.Locator("//h3[contains(text(),'No users yet')]");
+                int count = await nousersyet.CountAsync();
+                if (count>0)
+                {
+                    await RolesField().ClickAsync();
+                    var selectedRole = anyRole();
+                    searchBar = (await selectedRole.InnerTextAsync()).Trim();
+
+                    await selectedRole.ClickAsync();
+                }
+                else
+                {
+                    await RolesField().ClickAsync();
+                }
+               
+            }
+           
+
+
+        }
+        
 
         public async Task clickXButton()
         {
@@ -552,12 +870,66 @@ namespace Tekademy1C.PageObjects
             return true;
         }
 
-      
+        public async Task<bool> pickedRole()
+        {
+            await Expect(pickRole()).ToBeVisibleAsync();
+            return true;
+        }
+
+        public async Task<bool> suspendedRole()
+        {
+            await Expect(viewSuspendedRole()).ToBeVisibleAsync();
+            return true;
+        }
+
+
+        public async Task<bool> activeRole()
+        {
+            await Expect(viewActiveRole()).ToBeVisibleAsync();
+            return true;
+        }
+
+        public async Task<bool> userVerifyTheDeleteUserHasBeenDeletedUserManagementPage()
+        {
+            Assert.That(await deleteUserHasBeenDeleted().CountAsync(), Is.EqualTo(0));
+            return true;
+        }
+
+        public async Task<bool> UserVerifyUserHaveNotDelete()
+        {
+            Assert.That(await deleteUserHasBeenDeleted().CountAsync(), Is.EqualTo(1));
+            return true;
+        }
+
+        public async Task<bool> userViewTheSearchNameOnTheTable(string table)
+        {
+            await Task.Delay(1000);
+            var rows = _page.Locator($"//table[@data-slot='table']/tbody/tr/td[position() = count(//table[@data-slot='table']//th[normalize-space()='{table}']/preceding-sibling::th) + 1]");
+
+            int count = await rows.CountAsync();
+
+            for (int i = 0; i < count; i++)
+            {
+                var rowText = await rows.Nth(i).InnerTextAsync();
+
+                Assert.That(
+                    rowText,
+                    Does.Contain(searchBar),
+                    $"Expected Student User in row {i+1}, but found: {rowText}"
+                );
+            }
+
+            return true;
+        }
+
+        
+
         public async Task<bool> displayedMessage(string message)
         {
+            await Task.Delay(1000);
             //await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
             //await displayed(message).WaitForAsync(new LocatorWaitForOptions { Timeout = 60000 });
-           
+
             //await displayed(message).WaitForAsync();
 
             //Assert.That(await displayed(message).IsVisibleAsync(),Is.True);
