@@ -1,4 +1,4 @@
-﻿using Microsoft.ApplicationInsights.Extensibility.Implementation;
+using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Playwright;
 using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
@@ -103,6 +103,16 @@ namespace Tekademy1C.PageObjects
             return _page.Locator("input[id='user-email']");
         }
 
+        public ILocator enterCategoryAsync()
+        {
+            return _page.Locator("input[id='resource-category-name']");
+        }
+       
+        public ILocator enterDisplay()
+        {
+            return _page.Locator("input[placeholder='0']");
+        }
+        
         public ILocator checkBox()
         {
             return _page.Locator("input[type='checkbox']");
@@ -186,6 +196,16 @@ namespace Tekademy1C.PageObjects
             UserData user = GenerateRandomName();
             return _page.GetByLabel(user.selectStatus).GetByText(user.selectStatus);
         }
+        public ILocator deleteBtn()
+        {
+            return _page.Locator("(//span[contains(text(),'DEVS')]/following::button[@aria-label='Delete category'])[1]");
+        }
+
+        public ILocator editBtn()
+        {
+            return _page.Locator("(//span[contains(text(),'DEVS')]/following::button[@aria-label='Edit category'])[1]");
+        }
+
         
 
         public ILocator xButton()
@@ -221,7 +241,7 @@ namespace Tekademy1C.PageObjects
         public ILocator Dashboard()
         {
             //return _page.GetByAltText("Tekademy");
-            return _page.GetByText("Overview");
+           return _page.GetByRole(AriaRole.Heading, new() { Name = "Dashboard Overview" });
 
             
         }
@@ -258,7 +278,8 @@ namespace Tekademy1C.PageObjects
 
         public ILocator displayed(string message)
         {
-            return _page.GetByText(message);
+           return _page.GetByLabel("Notifications Alt+T").GetByText(message);
+
         }
 
         public ILocator passwordMessage()
@@ -291,6 +312,7 @@ namespace Tekademy1C.PageObjects
             public required string selectStatus { get; set; }
 
             public required string SelectAnyRole { get; set; }
+
             public required string Category { get; set; }
             public required string FirstName { get; set; }
             public required string LastName { get; set; }
@@ -315,6 +337,7 @@ namespace Tekademy1C.PageObjects
             string selectAnyStatus = selectAnyStatuss[random.Next(selectAnyStatuss.Length)];
             string SelectAnyRole = SelectAnyRoles[random.Next(SelectAnyRoles.Length)];
             string category = categories[random.Next(categories.Length)];
+           
             string firstNameValue = firstNames[random.Next(firstNames.Length)];
             string lastName = lastNames[random.Next(lastNames.Length)];
             string email = $"{firstNameValue.ToLower()}.{lastName.ToLower()}{random.Next(0, 10000)}@example.com";
@@ -445,46 +468,35 @@ namespace Tekademy1C.PageObjects
         {
             await loginbtn().ScrollIntoViewIfNeededAsync();
 
-            try
-            {
-                var loginResponse = await _page.RunAndWaitForResponseAsync(
-                    async () =>
-                    {
-                        await loginbtn().ClickAsync();
-                    },
-                    response =>
-                        response.Request.Method == "POST" &&
-                        response.Url.Contains("auth", StringComparison.OrdinalIgnoreCase),
-                    new()
-                    {
-                        Timeout = 60_000
-                    });
+            await loginbtn().ClickAsync();
+        }
 
-                TestContext.Progress.WriteLine($"Login URL: {loginResponse.Url}");
-                TestContext.Progress.WriteLine($"Login status: {loginResponse.Status}");
+        public async Task enterCategoryNameAsync(string categoryName)
+        {
+            Random random = new Random();
+            string displayOrder = random.Next(1, 10000).ToString();
 
-                if (loginResponse.Status >= 400)
-                {
-                    var responseBody = await loginResponse.TextAsync();
-                    TestContext.Progress.WriteLine($"Login error response: {responseBody}");
-                }
 
-                await Expect(menu("Library")).ToBeVisibleAsync(new()
-                {
-                    Timeout = 60_000
-                });
-            }
-            catch
-            {
-                await _page.ScreenshotAsync(new()
-                {
-                    Path = "login-failure.png",
-                    FullPage = true
-                });
+            await enterCategoryAsync().FillAsync(categoryName+displayOrder);
+        }
 
-                TestContext.Progress.WriteLine($"Current URL: {_page.Url}");
-                throw;
-            }
+        public async Task clearCategoryNameAsync()
+        {
+   
+            await enterCategoryAsync().ClearAsync();
+        }
+        
+        public async Task existingCategoryName(string name)
+        {
+            await enterCategoryAsync().FillAsync(name);
+        }
+
+        public async Task enterDisplayed()
+        {
+            Random random = new Random();
+            string displayOrder = random.Next(1, 15).ToString();
+
+            await enterDisplay().FillAsync(displayOrder);
         }
 
         public async Task userSelectAnyRole()
@@ -815,6 +827,18 @@ namespace Tekademy1C.PageObjects
 
 
         }
+        
+
+        public async Task deletebutn()
+        {
+            await deleteBtn().ClickAsync();
+        }
+
+        public async Task editbtn()
+        {
+            await editBtn().ClickAsync();
+        }
+
         
 
         public async Task clickXButton()
